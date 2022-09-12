@@ -1,29 +1,30 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState } from "react";
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes
+} from "react-router-dom";
+import { ConfigProvider } from 'zarm'
+import zhCN from 'zarm/lib/config-provider/locale/zh_CN'
+import 'zarm/dist/zarm.css'
 
-import useApi from './hooks/useApi';
+import routerList from './router/index'
 
-function Child({callback}) {
-    useEffect(() => {
-        callback()
-    }, [callback])
-    return <div>子组件</div>
-}
-
-function  App() {
-    // const [{data}, handleInputChange] = useApi()
-    const [name, setName] = useState('');
-    const [age, setAge] = useState(18);
-    const [kw, setkw] = useState('');
-    const callback = useCallback(() => {
-        console.log(111)
-    }, [name, age])
+function App() {
     return (
-        <div className='app'>
-            <input type="text" onChange={(e) => setName(e.target.value)}/>
-            <input type="text" onChange={(e) => setAge(e.target.value)}/>
-            <input type="text" onChange={(e) => setkw(e.target.value)}/>
-            <Child callback={callback}/>
-        </div>
+        <Router>
+            <ConfigProvider primaryColor={'#007fff'} locale={zhCN}>
+                <Routes>
+                    { routerList.map(route => 
+                        <Route 
+                            key={ route.path } 
+                            path={ route.path } 
+                            element={<route.component />}>
+                        </Route>) 
+                    }
+                </Routes>
+             </ConfigProvider>
+        </Router>
     )
 }
 
